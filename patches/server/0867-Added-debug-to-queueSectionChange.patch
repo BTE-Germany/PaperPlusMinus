@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Robin Ferch <robin@ferch-mail.de>
+Date: Thu, 17 Feb 2022 14:50:11 +0100
+Subject: [PATCH] Added debug to queueSectionChange
+
+
+diff --git a/src/main/java/ca/spottedleaf/starlight/common/light/StarLightInterface.java b/src/main/java/ca/spottedleaf/starlight/common/light/StarLightInterface.java
+index ef8dcbb6bbc0769e9ccfdadb05e6a46c070eda98..5dca0c2d962170235fa3b250070cf5314c6de0b1 100644
+--- a/src/main/java/ca/spottedleaf/starlight/common/light/StarLightInterface.java
++++ b/src/main/java/ca/spottedleaf/starlight/common/light/StarLightInterface.java
+@@ -589,7 +589,14 @@ public final class StarLightInterface {
+             if (tasks.changedSectionSet == null) {
+                 tasks.changedSectionSet = new Boolean[this.manager.maxSection - this.manager.minSection + 1];
+             }
+-            tasks.changedSectionSet[pos.getY() - this.manager.minSection] = Boolean.valueOf(newEmptyValue);
++            try {
++                tasks.changedSectionSet[pos.getY() - this.manager.minSection] = Boolean.valueOf(newEmptyValue);
++            } catch (IndexOutOfBoundsException e) {
++                System.out.println("pos.getY() -> " + pos.getY());
++                System.out.println("this.manager.minSection -> " + this.manager.minSection);
++                e.printStackTrace();
++            }
++
+ 
+             return tasks.onComplete;
+         }
