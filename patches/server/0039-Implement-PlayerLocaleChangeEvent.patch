@@ -5,7 +5,7 @@ Subject: [PATCH] Implement PlayerLocaleChangeEvent
 
 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 88b6be62678fc09b5a39db28c6d71cc31b16dbcd..352bfe795aea26307de9c998d67a43af3e4845f0 100644
+index fcbd7a78477ed51a91aee626ac62529f106a40cb..e3e9f082102d16a8e16df3b35772430c6d102243 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1727,7 +1727,7 @@ public class ServerPlayer extends Player {
