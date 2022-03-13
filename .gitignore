@@ -69,3 +69,20 @@ paperclip.properties
 !gradle/wrapper/gradle-wrapper.jar
 
 test-plugin.settings.gradle.kts
+/world/
+/world_nether/
+/world_the_end/
+banned-ips.json
+banned-players.json
+bukkit.yml
+commands.yml
+eula.txt
+help.yml
+ops.json
+paper.yml
+permissions.yml
+server.properties
+spigot.yml
+usercache.json
+version_history.json
+whitelist.json
