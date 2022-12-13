@@ -5,7 +5,7 @@ Subject: [PATCH] Ability to get Tile Entities from a chunk without snapshots
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftChunk.java b/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
-index 404bd3389aaa75ca23f04d23ecea9093443c3976..f3c67a815c570beb14136905cbf5aa4046ee8394 100644
+index 46b1cce7d482adea911b71f3e3623ac0574a85ae..6772b7e6ebded67f656dfb1af99e4d516aca67c5 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftChunk.java
 @@ -4,8 +4,10 @@ import com.google.common.base.Preconditions;
@@ -19,7 +19,7 @@ index 404bd3389aaa75ca23f04d23ecea9093443c3976..f3c67a815c570beb14136905cbf5aa40
  import java.util.Objects;
  import java.util.concurrent.locks.LockSupport;
  import java.util.function.BooleanSupplier;
-@@ -176,6 +178,13 @@ public class CraftChunk implements Chunk {
+@@ -134,6 +136,13 @@ public class CraftChunk implements Chunk {
  
      @Override
      public BlockState[] getTileEntities() {
@@ -33,7 +33,7 @@ index 404bd3389aaa75ca23f04d23ecea9093443c3976..f3c67a815c570beb14136905cbf5aa40
          if (!this.isLoaded()) {
              this.getWorld().getChunkAt(x, z); // Transient load for this tick
          }
-@@ -190,7 +199,29 @@ public class CraftChunk implements Chunk {
+@@ -148,7 +157,29 @@ public class CraftChunk implements Chunk {
              }
  
              BlockPos position = (BlockPos) obj;

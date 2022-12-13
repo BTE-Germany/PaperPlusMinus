@@ -7,12 +7,12 @@ Avoids a hashmap lookup by cacheing a reference to the CraftBlockData
 and cloning it when one is needed.
 
 diff --git a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-index 2b88ea323b7e179015751e87d1a4303bffed7f51..a5b7fbd940bf180b76017442ee7224761741fe52 100644
+index 5bba39a066ede470cebc92724735c86ecfd4239d..c53b80cba9ea658d20e527a9bfcd6b5d7d9f51fc 100644
 --- a/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
 +++ b/src/main/java/net/minecraft/world/level/block/state/BlockBehaviour.java
-@@ -680,6 +680,14 @@ public abstract class BlockBehaviour {
-             this.hasPostProcess = blockbase_info.hasPostProcess;
-             this.emissiveRendering = blockbase_info.emissiveRendering;
+@@ -728,6 +728,14 @@ public abstract class BlockBehaviour implements FeatureElement {
+             this.spawnParticlesOnBreak = blockbase_info.spawnParticlesOnBreak;
+             this.conditionallyFullOpaque = this.isOpaque() & this.isTransparentOnSomeFaces(); // Paper
          }
 +        // Paper start - impl cached craft block data, lazy load to fix issue with loading at the wrong time
 +        private org.bukkit.craftbukkit.block.data.CraftBlockData cachedCraftBlockData;
@@ -26,10 +26,10 @@ index 2b88ea323b7e179015751e87d1a4303bffed7f51..a5b7fbd940bf180b76017442ee722476
          // Paper start
          protected boolean shapeExceedsCube = true;
 diff --git a/src/main/java/org/bukkit/craftbukkit/block/data/CraftBlockData.java b/src/main/java/org/bukkit/craftbukkit/block/data/CraftBlockData.java
-index 41702f632ca89158da3d72a6135240ccb2283ad6..275401f9bf7a78e69766e0547c94c3a115a8896c 100644
+index 953fe30e445885809caa16161262089a7786057b..6182ce8c32a334d3488c03f42bf3befcc0b80503 100644
 --- a/src/main/java/org/bukkit/craftbukkit/block/data/CraftBlockData.java
 +++ b/src/main/java/org/bukkit/craftbukkit/block/data/CraftBlockData.java
-@@ -527,7 +527,17 @@ public class CraftBlockData implements BlockData {
+@@ -542,7 +542,17 @@ public class CraftBlockData implements BlockData {
          return craft;
      }
  

@@ -8,10 +8,10 @@ Adds API's to load or generate chunks asynchronously.
 Also adds utility methods to Entity to teleport asynchronously.
 
 diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/World.java
-index 39f7817838c73c78f138c98546a1b797e7529550..fc8631f45abaaabe2cdb7653c43b98b36a80ec78 100644
+index 44b758d70b96a0ba857e1090af91893313945096..d7f0117a8776a5bd0c6ec6c05d2c56c3b8e08de8 100644
 --- a/src/main/java/org/bukkit/World.java
 +++ b/src/main/java/org/bukkit/World.java
-@@ -964,6 +964,482 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
+@@ -969,6 +969,482 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
          }
          return nearby;
      }
@@ -495,10 +495,10 @@ index 39f7817838c73c78f138c98546a1b797e7529550..fc8631f45abaaabe2cdb7653c43b98b3
  
      /**
 diff --git a/src/main/java/org/bukkit/entity/Entity.java b/src/main/java/org/bukkit/entity/Entity.java
-index df07eb07896790a09d1022daef5cffc6a435f739..7a05615ec7678338801bcae2ec9a029b13d323d2 100644
+index 7c867a54e18798d782971a68548eac541e9f50c0..fb3187692878e9686d54c8d022035eba2cea6f25 100644
 --- a/src/main/java/org/bukkit/entity/Entity.java
 +++ b/src/main/java/org/bukkit/entity/Entity.java
-@@ -163,6 +163,33 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
+@@ -164,6 +164,33 @@ public interface Entity extends Metadatable, CommandSender, Nameable, Persistent
       */
      public boolean teleport(@NotNull Entity destination, @NotNull TeleportCause cause);
  

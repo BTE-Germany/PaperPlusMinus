@@ -5,13 +5,13 @@ Subject: [PATCH] Left handed API
 
 
 diff --git a/src/main/java/org/bukkit/entity/Mob.java b/src/main/java/org/bukkit/entity/Mob.java
-index 07bedbc15ba2463d3c629ae68d229286d4033f79..984ad873f36c3dcc73703eb6902c4eab5f1e72b6 100644
+index 11b6d1aba7d1f6ae1f3c822193486f5a1478e105..d53de07b40d9cd63a9553d4b0ad442d526530b92 100644
 --- a/src/main/java/org/bukkit/entity/Mob.java
 +++ b/src/main/java/org/bukkit/entity/Mob.java
-@@ -148,4 +148,20 @@ public interface Mob extends LivingEntity, Lootable {
-      * @return whether the mob is aware
+@@ -162,4 +162,20 @@ public interface Mob extends LivingEntity, Lootable {
       */
-     public boolean isAware();
+     @Nullable
+     public Sound getAmbientSound();
 +
 +    // Paper start
 +    /**

@@ -5,12 +5,12 @@ Subject: [PATCH] More World API
 
 
 diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/World.java
-index 47b9b8b476cbc7a4ef329dbd7629195851c8f4ea..def9f0f9803e71cbe57abcffeb9114a5ab462e54 100644
+index 79b1015c56aab88ee8bf70cef0a2ab05c910d991..82eb04abe67e05f1bb6fd2a0350d5b2574a01d4b 100644
 --- a/src/main/java/org/bukkit/World.java
 +++ b/src/main/java/org/bukkit/World.java
-@@ -3645,6 +3645,114 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
+@@ -3709,6 +3709,114 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      @Nullable
-     public Location locateNearestStructure(@NotNull Location origin, @NotNull StructureType structureType, int radius, boolean findUnexplored);
+     StructureSearchResult locateNearestStructure(@NotNull Location origin, @NotNull Structure structure, int radius, boolean findUnexplored);
  
 +    // Paper start
 +    /**

@@ -5,26 +5,26 @@ Subject: [PATCH] Add TNTPrimeEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/boss/enderdragon/EnderDragon.java b/src/main/java/net/minecraft/world/entity/boss/enderdragon/EnderDragon.java
-index 139c98ab86589027873418601dbc7f4ed6358906..7eebecf836d21fc4ee901d23d7061db64486c0d5 100644
+index a889be9dd2a94b531a227ff69a5e761e103067be..3b14fd5d67716a5b3610c10e8105d29f93a1d7a9 100644
 --- a/src/main/java/net/minecraft/world/entity/boss/enderdragon/EnderDragon.java
 +++ b/src/main/java/net/minecraft/world/entity/boss/enderdragon/EnderDragon.java
-@@ -533,6 +533,11 @@ public class EnderDragon extends Mob implements Enemy {
+@@ -532,6 +532,11 @@ public class EnderDragon extends Mob implements Enemy {
                      });
-                     craftBlock.getNMS().spawnAfterBreak((ServerLevel) level, blockposition, ItemStack.EMPTY);
+                     craftBlock.getNMS().spawnAfterBreak((ServerLevel) level, blockposition, ItemStack.EMPTY, false);
                  }
 +                // Paper start - TNTPrimeEvent
 +                org.bukkit.block.Block tntBlock = level.getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
-+                if(!new com.destroystokyo.paper.event.block.TNTPrimeEvent(tntBlock, com.destroystokyo.paper.event.block.TNTPrimeEvent.PrimeReason.EXPLOSION, explosionSource.getSourceMob().getBukkitEntity()).callEvent())
++                if(!new com.destroystokyo.paper.event.block.TNTPrimeEvent(tntBlock, com.destroystokyo.paper.event.block.TNTPrimeEvent.PrimeReason.EXPLOSION, explosionSource.getIndirectSourceEntity().getBukkitEntity()).callEvent())
 +                    continue;
 +                // Paper end
                  nmsBlock.wasExploded(level, blockposition, explosionSource);
  
                  this.level.removeBlock(blockposition, false);
 diff --git a/src/main/java/net/minecraft/world/level/block/FireBlock.java b/src/main/java/net/minecraft/world/level/block/FireBlock.java
-index 55e35c210c21e8ff1222859fafe4d5d58aea0bc7..33752432af861a708e0dbb1afafcd5968d795931 100644
+index e725168ebce3d1b2548a1bc5baa612a6e718e337..7e48326b6dc847a84e0aff2d393cadf9bace7979 100644
 --- a/src/main/java/net/minecraft/world/level/block/FireBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/FireBlock.java
-@@ -290,7 +290,7 @@ public class FireBlock extends BaseFireBlock {
+@@ -290,12 +290,19 @@ public class FireBlock extends BaseFireBlock {
  
                  world.setBlock(blockposition, this.getStateWithAge(world, blockposition, l), 3);
              } else {
@@ -33,12 +33,10 @@ index 55e35c210c21e8ff1222859fafe4d5d58aea0bc7..33752432af861a708e0dbb1afafcd596
              }
  
              Block block = iblockdata.getBlock();
-@@ -298,6 +298,13 @@ public class FireBlock extends BaseFireBlock {
-             if (block instanceof TntBlock) {
-                 TntBlock blocktnt = (TntBlock) block;
  
+             if (block instanceof TntBlock) {
 +                // Paper start - TNTPrimeEvent
-+                org.bukkit.block.Block tntBlock = net.minecraft.server.MCUtil.toBukkitBlock(world, blockposition);
++                org.bukkit.block.Block tntBlock = io.papermc.paper.util.MCUtil.toBukkitBlock(world, blockposition);
 +                if (!new com.destroystokyo.paper.event.block.TNTPrimeEvent(tntBlock, com.destroystokyo.paper.event.block.TNTPrimeEvent.PrimeReason.FIRE, null).callEvent()) {
 +                    return;
 +                }
@@ -48,7 +46,7 @@ index 55e35c210c21e8ff1222859fafe4d5d58aea0bc7..33752432af861a708e0dbb1afafcd596
              }
          }
 diff --git a/src/main/java/net/minecraft/world/level/block/TntBlock.java b/src/main/java/net/minecraft/world/level/block/TntBlock.java
-index b7bdeb40ec988b41ba602cea695fc14b7146bc4d..96cf2a42c9836a86541029f9d674ee5478d47b0c 100644
+index f5b685cb678f523c1c07d72b818ada93af64840a..ade39e877edbb07082bb2d87e00ae4bfb6ab1c8f 100644
 --- a/src/main/java/net/minecraft/world/level/block/TntBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/TntBlock.java
 @@ -38,6 +38,11 @@ public class TntBlock extends Block {
@@ -56,7 +54,7 @@ index b7bdeb40ec988b41ba602cea695fc14b7146bc4d..96cf2a42c9836a86541029f9d674ee54
          if (!oldState.is(state.getBlock())) {
              if (world.hasNeighborSignal(pos)) {
 +                // Paper start - TNTPrimeEvent
-+                org.bukkit.block.Block tntBlock = net.minecraft.server.MCUtil.toBukkitBlock(world, pos);;
++                org.bukkit.block.Block tntBlock = io.papermc.paper.util.MCUtil.toBukkitBlock(world, pos);;
 +                if(!new com.destroystokyo.paper.event.block.TNTPrimeEvent(tntBlock, com.destroystokyo.paper.event.block.TNTPrimeEvent.PrimeReason.REDSTONE, null).callEvent())
 +                    return;
 +                // Paper end
@@ -65,10 +63,10 @@ index b7bdeb40ec988b41ba602cea695fc14b7146bc4d..96cf2a42c9836a86541029f9d674ee54
              }
 @@ -48,6 +53,11 @@ public class TntBlock extends Block {
      @Override
-     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
          if (world.hasNeighborSignal(pos)) {
 +            // Paper start - TNTPrimeEvent
-+            org.bukkit.block.Block tntBlock = net.minecraft.server.MCUtil.toBukkitBlock(world, pos);;
++            org.bukkit.block.Block tntBlock = io.papermc.paper.util.MCUtil.toBukkitBlock(world, pos);;
 +            if(!new com.destroystokyo.paper.event.block.TNTPrimeEvent(tntBlock, com.destroystokyo.paper.event.block.TNTPrimeEvent.PrimeReason.REDSTONE, null).callEvent())
 +                return;
 +            // Paper end
@@ -80,12 +78,12 @@ index b7bdeb40ec988b41ba602cea695fc14b7146bc4d..96cf2a42c9836a86541029f9d674ee54
      public void wasExploded(Level world, BlockPos pos, Explosion explosion) {
          if (!world.isClientSide) {
 +            // Paper start - TNTPrimeEvent
-+            org.bukkit.block.Block tntBlock = net.minecraft.server.MCUtil.toBukkitBlock(world, pos);
++            org.bukkit.block.Block tntBlock = io.papermc.paper.util.MCUtil.toBukkitBlock(world, pos);
 +            org.bukkit.entity.Entity source = explosion.source != null ? explosion.source.getBukkitEntity() : null;
 +            if(!new com.destroystokyo.paper.event.block.TNTPrimeEvent(tntBlock, com.destroystokyo.paper.event.block.TNTPrimeEvent.PrimeReason.EXPLOSION, source).callEvent())
 +                return;
 +            // Paper end
-             PrimedTnt entitytntprimed = new PrimedTnt(world, (double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, explosion.getSourceMob());
+             PrimedTnt entitytntprimed = new PrimedTnt(world, (double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, explosion.getIndirectSourceEntity());
              int i = entitytntprimed.getFuse();
  
 @@ -95,6 +111,11 @@ public class TntBlock extends Block {
@@ -93,7 +91,7 @@ index b7bdeb40ec988b41ba602cea695fc14b7146bc4d..96cf2a42c9836a86541029f9d674ee54
              return super.use(state, world, pos, player, hand, hit);
          } else {
 +            // Paper start - TNTPrimeEvent
-+            org.bukkit.block.Block tntBlock = net.minecraft.server.MCUtil.toBukkitBlock(world, pos);
++            org.bukkit.block.Block tntBlock = io.papermc.paper.util.MCUtil.toBukkitBlock(world, pos);
 +            if(!new com.destroystokyo.paper.event.block.TNTPrimeEvent(tntBlock, com.destroystokyo.paper.event.block.TNTPrimeEvent.PrimeReason.ITEM, player.getBukkitEntity()).callEvent())
 +                return InteractionResult.FAIL;
 +            // Paper end
@@ -105,7 +103,7 @@ index b7bdeb40ec988b41ba602cea695fc14b7146bc4d..96cf2a42c9836a86541029f9d674ee54
                  }
                  // CraftBukkit end
 +                // Paper start - TNTPrimeEvent
-+                org.bukkit.block.Block tntBlock = net.minecraft.server.MCUtil.toBukkitBlock(world, blockposition);
++                org.bukkit.block.Block tntBlock = io.papermc.paper.util.MCUtil.toBukkitBlock(world, blockposition);
 +                if (!new com.destroystokyo.paper.event.block.TNTPrimeEvent(tntBlock, com.destroystokyo.paper.event.block.TNTPrimeEvent.PrimeReason.PROJECTILE, projectile.getBukkitEntity()).callEvent()) {
 +                    return;
 +                }

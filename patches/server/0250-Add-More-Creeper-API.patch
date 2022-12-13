@@ -5,9 +5,18 @@ Subject: [PATCH] Add More Creeper API
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/monster/Creeper.java b/src/main/java/net/minecraft/world/entity/monster/Creeper.java
-index 951654626a9eaa8d8cc4044f98b0931097e848e0..f9193f8cd3b0d0e689a523c7142a897c342c2931 100644
+index 802a46ae9f18e0b58a7e0c38c18b367edd6b7a76..805e267090285d625dbeb75b06f8c5ad141a75a4 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/Creeper.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/Creeper.java
+@@ -132,7 +132,7 @@ public class Creeper extends Monster implements PowerableMob {
+         }
+ 
+         if (nbt.getBoolean("ignited")) {
+-            this.ignite();
++            this.entityData.set(Creeper.DATA_IS_IGNITED, true); // Paper - set directly to avoid firing event
+         }
+ 
+     }
 @@ -309,7 +309,18 @@ public class Creeper extends Monster implements PowerableMob {
      }
  

@@ -21,34 +21,11 @@ Splitting the field up and making it configurable allows for server owners
 to take the burden of this into their own hand without having to rely on
 plugins doing unsafe things.
 
-diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 114a65963b65597ff915ec3a0d75bb78f33bd774..d654affc5565622cfabde9b838aa2b40e4e122bb 100644
---- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
-+++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-@@ -318,4 +318,18 @@ public class PaperConfig {
-             Bukkit.getLogger().log(Level.INFO, "Using Aikar's Alternative Luck Formula to apply Luck attribute to all loot pool calculations. See https://luckformula.emc.gs");
-         }
-     }
-+
-+    public static int tabSpamIncrement = 1;
-+    public static int tabSpamLimit = 500;
-+    private static void tabSpamLimiters() {
-+        tabSpamIncrement = getInt("settings.spam-limiter.tab-spam-increment", tabSpamIncrement);
-+        // Older versions used a smaller limit, which is too low for 1.13, we'll bump this up if default
-+        if (version < 14) {
-+            if (tabSpamIncrement == 10) {
-+                set("settings.spam-limiter.tab-spam-increment", 2);
-+                tabSpamIncrement = 2;
-+            }
-+        }
-+        tabSpamLimit = getInt("settings.spam-limiter.tab-spam-limit", tabSpamLimit);
-+    }
- }
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index dced761b1f74de28a784dfcffed1bbc002e5a586..8a1da2b1e667420df97e432b5a5fd9563cadda91 100644
+index 867478671d3223338bf01a36da0361a5ae1f38be..c5ad4d8a08f03a6f75241f4e4913d84bcb0fdf0b 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -227,6 +227,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -261,6 +261,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
      private long keepAliveChallenge;
      // CraftBukkit start - multithreaded fields
      private final AtomicInteger chatSpamTickCount = new AtomicInteger();
@@ -56,7 +33,7 @@ index dced761b1f74de28a784dfcffed1bbc002e5a586..8a1da2b1e667420df97e432b5a5fd956
      // CraftBukkit end
      private int dropSpamTickCount;
      private double firstGoodX;
-@@ -358,6 +359,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -409,6 +410,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          this.server.getProfiler().pop();
          // CraftBukkit start
          for (int spam; (spam = this.chatSpamTickCount.get()) > 0 && !this.chatSpamTickCount.compareAndSet(spam, spam - 1); ) ;
@@ -64,12 +41,12 @@ index dced761b1f74de28a784dfcffed1bbc002e5a586..8a1da2b1e667420df97e432b5a5fd956
          /* Use thread-safe field access instead
          if (this.chatSpamTickCount > 0) {
              --this.chatSpamTickCount;
-@@ -710,7 +712,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+@@ -785,7 +787,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
      public void handleCustomCommandSuggestions(ServerboundCommandSuggestionPacket packet) {
-         // PlayerConnectionUtils.ensureMainThread(packetplayintabcomplete, this, this.player.getWorldServer()); // Paper - run this async
+         // PacketUtils.ensureRunningOnSameThread(packet, this, this.player.getLevel()); // Paper - run this async
          // CraftBukkit start
 -        if (this.chatSpamTickCount.addAndGet(1) > 500 && !this.server.getPlayerList().isOp(this.player.getGameProfile())) {
-+        if (this.chatSpamTickCount.addAndGet(com.destroystokyo.paper.PaperConfig.tabSpamIncrement) > com.destroystokyo.paper.PaperConfig.tabSpamLimit && !this.server.getPlayerList().isOp(this.player.getGameProfile())) { // Paper start - split and make configurable
-             server.scheduleOnMain(() -> this.disconnect(new TranslatableComponent("disconnect.spam", new Object[0]))); // Paper
++        if (this.chatSpamTickCount.addAndGet(io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.tabSpamIncrement) > io.papermc.paper.configuration.GlobalConfiguration.get().spamLimiter.tabSpamLimit && !this.server.getPlayerList().isOp(this.player.getGameProfile())) { // Paper start - split and make configurable
+             server.scheduleOnMain(() -> this.disconnect(Component.translatable("disconnect.spam", new Object[0]))); // Paper
              return;
          }

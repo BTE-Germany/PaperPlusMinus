@@ -5,10 +5,10 @@ Subject: [PATCH] Add Mob#lookAt API
 
 
 diff --git a/src/main/java/org/bukkit/entity/Mob.java b/src/main/java/org/bukkit/entity/Mob.java
-index 55c5227a340e34621160afc9fae3ea843492881d..07bedbc15ba2463d3c629ae68d229286d4033f79 100644
+index 7eee2e561346ac1d672f9652edb78e76c910fc9d..11b6d1aba7d1f6ae1f3c822193486f5a1478e105 100644
 --- a/src/main/java/org/bukkit/entity/Mob.java
 +++ b/src/main/java/org/bukkit/entity/Mob.java
-@@ -26,6 +26,88 @@ public interface Mob extends LivingEntity, Lootable {
+@@ -27,6 +27,88 @@ public interface Mob extends LivingEntity, Lootable {
       * @return True if mob is exposed to daylight
       */
      boolean isInDaylight();

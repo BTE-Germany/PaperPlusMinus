@@ -5,7 +5,7 @@ Subject: [PATCH] isChunkGenerated API
 
 
 diff --git a/src/main/java/org/bukkit/Location.java b/src/main/java/org/bukkit/Location.java
-index 58728a0f0722b378efa129e26f0c822b63d1af36..88b3e0323dbc4f0fce31b147c7aaa08d65745852 100644
+index 16a604b6315daff228c827fe02b1234cca3e884d..20978b269a7757a561d6b872cc77898b44bbd272 100644
 --- a/src/main/java/org/bukkit/Location.java
 +++ b/src/main/java/org/bukkit/Location.java
 @@ -3,6 +3,7 @@ package org.bukkit;
@@ -16,7 +16,7 @@ index 58728a0f0722b378efa129e26f0c822b63d1af36..88b3e0323dbc4f0fce31b147c7aaa08d
  import java.util.HashMap;
  import java.util.Map;
  import org.bukkit.block.Block;
-@@ -545,6 +546,16 @@ public class Location implements Cloneable, ConfigurationSerializable {
+@@ -545,6 +546,16 @@ public class Location implements Cloneable, ConfigurationSerializable, io.paperm
      public boolean isChunkLoaded() { return this.getWorld().isChunkLoaded(locToBlock(x) >> 4, locToBlock(z) >> 4); } // Paper
  
      // Paper start
@@ -34,10 +34,10 @@ index 58728a0f0722b378efa129e26f0c822b63d1af36..88b3e0323dbc4f0fce31b147c7aaa08d
      /**
       * Sets the position of this Location and returns itself
 diff --git a/src/main/java/org/bukkit/World.java b/src/main/java/org/bukkit/World.java
-index 7d77647dfe085cde87a9d2adb4c02b1f441940d7..39f7817838c73c78f138c98546a1b797e7529550 100644
+index 25e38f0f4fe36193dcc968ef7619bc8c0e705fb2..44b758d70b96a0ba857e1090af91893313945096 100644
 --- a/src/main/java/org/bukkit/World.java
 +++ b/src/main/java/org/bukkit/World.java
-@@ -255,6 +255,17 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
+@@ -260,6 +260,17 @@ public interface World extends RegionAccessor, WorldInfo, PluginMessageRecipient
      public default Chunk getChunkAt(long chunkKey) {
          return getChunkAt((int) chunkKey, (int) (chunkKey >> 32));
      }

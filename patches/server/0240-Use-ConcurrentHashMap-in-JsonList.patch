@@ -23,18 +23,18 @@ Modified isEmpty to use the isEmpty() method instead of the slightly confusing s
 The point of this is readability, but does have a side-benefit of a small microptimization
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index b2034239e158ce0388c9b09a52d457271a487d8f..8e8fee668b6a351ef14904e6e065e59014868adb 100644
+index 0f33c4bf3cb52f192d5dfe8b55a72c7a5a2f9311..52708bcdc046cc0a7f3798bfef06e49a6215acfd 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -618,7 +618,7 @@ public abstract class PlayerList {
-         } else if (!this.isWhitelisted(gameprofile, event)) { // Paper
-             //chatmessage = new ChatMessage("multiplayer.disconnect.not_whitelisted"); // Paper
-             //event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, org.spigotmc.SpigotConfig.whitelistMessage); // Spigot // Paper - moved to isWhitelisted
+@@ -632,7 +632,7 @@ public abstract class PlayerList {
+         } else if (!this.isWhiteListed(gameprofile, event)) { // Paper
+             //ichatmutablecomponent = Component.translatable("multiplayer.disconnect.not_whitelisted"); // Paper
+             //event.disallow(PlayerLoginEvent.Result.KICK_WHITELIST, net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().deserialize(org.spigotmc.SpigotConfig.whitelistMessage)); // Spigot // Paper - Adventure - moved to isWhitelisted
 -        } else if (this.getIpBans().isBanned(socketaddress) && !this.getIpBans().get(socketaddress).hasExpired()) {
 +        } else if (this.getIpBans().isBanned(socketaddress) && getIpBans().get(socketaddress) != null && !this.getIpBans().get(socketaddress).hasExpired()) { // Paper - fix NPE with temp ip bans
              IpBanListEntry ipbanentry = this.ipBans.get(socketaddress);
  
-             chatmessage = new TranslatableComponent("multiplayer.disconnect.banned_ip.reason", new Object[]{ipbanentry.getReason()});
+             ichatmutablecomponent = Component.translatable("multiplayer.disconnect.banned_ip.reason", ipbanentry.getReason());
 diff --git a/src/main/java/net/minecraft/server/players/StoredUserList.java b/src/main/java/net/minecraft/server/players/StoredUserList.java
 index 097a25fd4ae5438161158a1018c707886cfbb959..91899909abd83611ac63633fef701be542cf64bf 100644
 --- a/src/main/java/net/minecraft/server/players/StoredUserList.java
